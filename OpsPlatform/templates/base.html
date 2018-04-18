@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="renderer" content="webkit">
+
+    <title> CoolFish运维 </title>
+
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+
+    <link rel="shortcut icon" href="/static/favicon-20180201055603578.ico">
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/font-awesome.min.css?v=4.4.0" rel="stylesheet">
+    <link href="/static/css/animate.css" rel="stylesheet">
+    <link href="/static/css/style.css?v=4.1.0" rel="stylesheet">
+    {% block css %}
+
+    {% endblock css %}
+
+</head>
+
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
+    <div id="wrapper">
+        <!--左侧导航开始-->
+        <nav class="navbar-default navbar-static-side" role="navigation">
+            <div class="nav-close"><i class="fa fa-times-circle"></i>
+            </div>
+            <div class="sidebar-collapse">
+                <ul class="nav" id="side-menu">
+                    <li class="nav-header">
+                        <div class="dropdown profile-element">
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                <span class="clear">
+                                    <span class="block m-t-xs" style="font-size:20px;">
+                                        <i class="fa fa-area-chart"></i>
+                                        <strong class="font-bold">CoolFish</strong>
+                                    </span>
+                                </span>
+                            </a>
+                        </div>
+                        <div class="logo-element">Admin
+                        </div>
+                    </li>
+                    <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+                        <span class="ng-scope">分类</span>
+                    </li>
+                    <li>
+                        <a class="J_menuItem" href="{% url 'userperm:dashboard' %}">
+                            <i class="fa fa-home"></i>
+                            <span class="nav-label">主页</span>
+                        </a>
+                    </li>
+
+
+                    <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+                        <span class="ng-scope">分类</span>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa fa-table"></i>
+                            <span class="nav-label">资产管理</span>
+                            <span class="fa arrow"></span>
+                        </a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a class="J_menuItem" href="{% url 'asset:asset_list' %}">资产列表</a>
+                            </li>
+                            <li>
+                                <a class="J_menuItem" href="{% url 'asset:asset_add' %}">资产添加</a>
+                            </li>
+                            <li>
+                                <a class="J_menuItem" href="{% url 'asset:server_add' %}">服务器添加</a>
+                            </li>
+                            <li>
+
+                                <a class="J_menuItem" href="{% url 'asset:chart' %}">服务器分布</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="line dk"></li>
+                    <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+                        <span class="ng-scope">分类</span>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-cubes"></i> <span class="nav-label">任务管理</span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li><a class="J_menuItem" href="{% url 'task:cron-list' %}">Cron列表</a>
+                            </li>
+                            <li><a class="J_menuItem" href="{% url 'task:cron-add' %}">Cron添加</a>
+                            </li>
+                            <li><a class="J_menuItem" href="#">任务导入</a>
+                            </li>
+
+                        </ul>
+                    </li>
+
+                    <li class="line dk"></li>
+                    <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+                        <span class="ng-scope">分类</span>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-desktop"></i> <span class="nav-label">应用部署</span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li><a class="J_menuItem" href="{% url 'task:salt-list' %}">Salt列表</a>
+                            </li>
+                            <li><a class="J_menuItem" href="#">Salt状态</a>
+                            </li>
+                            <li><a class="J_menuItem" href="{% url 'task:salt-group' %}">Salt分组</a>
+                            </li>
+                            <li><a class="J_menuItem" href="{% url 'task:salt-exec' %}">Salt命令</a>
+                            </li>
+
+                        </ul>
+                    </li>
+
+                    <li class="line dk"></li>
+                    <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+                        <span class="ng-scope">分类</span>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-desktop"></i> <span class="nav-label">更新维护</span><span class="fa arrow"></span></a>
+                        <ul class="nav nav-second-level">
+                            <li><a class="J_menuItem" href="{% url 'deploy:index' %}">更新操作</a>
+                            </li>
+                            <li><a class="J_menuItem" href="#">asdas</a>
+                            </li>
+                            <li><a class="J_menuItem" href="{% url 'deploy:upload' %}">文件上传</a>
+                            </li>
+                            <li><a class="J_menuItem" href="#">更新日志</a>
+                            </li>
+
+                        </ul>
+                    </li>
+
+                    <li class="line dk"></li>
+                    <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+                        <span class="ng-scope">分类</span>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <i class="fa fa fa-user"></i>
+                            <span class="nav-label">用户中心</span>
+                            <span class="fa arrow"></span>
+                        </a>
+                        <ul class="nav nav-second-level">
+                            <li>
+                                <a class="J_menuItem" href="{% url 'userperm:user_list' %}">用户列表</a>
+                            </li>
+                            <li>
+                                <a class="J_menuItem" href="{% url 'userperm:audit' %}">审计操作</a>
+                            </li>
+                            <li>
+                                <a class="J_menuItem" href="{% url 'logout' %}">退出</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <!--左侧导航结束-->
+        <!--右侧部分开始-->
+        <div id="page-wrapper" class="gray-bg ">
+            <div class="row border-bottom">
+                <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+                    <div class="navbar-header"><a class="navbar-minimalize minimalize-styl-2 btn btn-info " href="#"><i class="fa fa-bars"></i> </a>
+
+                    </div>
+                    <ul class="nav navbar-top-links navbar-right">
+                        <li class="dropdown">
+                            <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+
+                                <i class="fa fa-user"></i> <span style="color: #00B2E2">{{ request.user}}</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-alerts">
+                             <li>
+                                    <a href="#">
+                                            <i class="pull-right fa fa-envelope fa-fw"></i>切换到Admin管理后台
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="{% url 'logout' %}">
+                                            <i class=" pull-right  fa fa-qq fa-fw"></i>退出当前用户
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </nav>
+
+
+                {% block content %}
+
+                {% endblock content %}
+            </div>
+        </div>
+        <!--右侧部分结束-->
+    </div>
+
+    <!-- 全局js -->
+    <script src="/static/js/jquery.min.js?v=2.1.4"></script>
+    <script src="/static/js/bootstrap.min.js?v=3.3.6"></script>
+
+    {% block js %}
+
+{% endblock js %}
+
+    <script src="/static/js/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="/static/js/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    <script src="/static/js/plugins/layer/layer.min.js"></script>
+
+    <!-- 自定义js -->
+    <script src="/static/js/hAdmin.js?v=4.1.0"></script>
+{#    <script type="text/javascript" src="/static/js/index.js"></script>#}
+
+    <!-- 第三方插件 -->
+    <script src="/static/js/plugins/pace/pace.min.js"></script>
+
+
+
+
+</body>
+
+</html>

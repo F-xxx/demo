@@ -1,0 +1,208 @@
+{% extends 'base.html' %}
+{% load saltfilter %}
+{% load myinclude %}
+{% block css %}
+{% endblock %}
+{% block content %}
+
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5><strong>远程命令</strong></h5>
+                    </div>
+                    <div class="ibox-content">
+                        <div class="row">
+                            <div class="col-md-7">
+                                <div class="tabbable" id="tabs-754998">
+                                    <ul class="nav nav-tabs">
+                                        <li class="active">
+                                            <a href="#panel-single" data-toggle="tab">单机管理</a>
+                                        </li>
+                                        <li>
+                                            <a href="#panel-group" data-toggle="tab">批量管理</a>
+                                        </li>
+                                    </ul>
+
+                                    <div class="ibox-panel" style="border-top:none;">
+
+                                        <div class="ibox-content">
+                                            <div class="loading"></div>
+                                            <div class="tab-content">
+                                                <div class="tab-pane active" id="panel-single">
+                                                    <form class="form-horizontal form-border"
+                                                          enctype="multipart/form-data">
+                                                        {% csrf_token %}
+                                                        <fieldset>
+                                                            <div class="item form-group">
+                                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">目标主机
+                                                                    <span class="required">*</span>
+                                                                </label>
+                                                                <div class="col-md-3 col-sm-3 col-xs-12">
+                                                                    {% show_user_group_minions 'multiple' %}
+                                                                </div>
+                                                            </div>
+                                                            <div class="item form-group">
+                                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">远程命令
+                                                                    <span class="required">*</span>
+                                                                </label>
+                                                                <div class="col-md-3 col-sm-3 col-xs-12">
+                                                                    <input type="text" class="form-control" id="esingle"
+                                                                           name="arg" value="{{ arg }}"
+                                                                           required="required">
+                                                                </div>
+                                                            </div>
+                                                            <div class="ln_solid"></div>
+                                                            <div class="form-group">
+                                                                <div class="col-md-6 col-md-offset-3">
+                                                                    <span class="esingle">
+                                                <a href="#"
+                                                   onclick="remote_exec(this, '{% url 'task:ajax-exec' %}');"
+                                                   name="panel-single" role="button" class="btn btn-success">  运行  </a>
+                                                </span>
+                                                                </div>
+                                                            </div>
+                                                        </fieldset>
+                                                    </form>
+                                                </div>
+                                                <div class="tab-pane" id="panel-group">
+                                                    <form class="form-horizontal form-border" method="post" action=""
+                                                          enctype="multipart/form-data">
+                                                        {% csrf_token %}
+
+                                                        <fieldset>
+
+                                                            <div class="item form-group">
+                                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">目标主机
+                                                                    <span class="required">*</span>
+                                                                </label>
+                                                                <div class="col-md-3 col-sm-3 col-xs-12">
+                                                                    {% show_user_group_groups %}
+                                                                </div>
+                                                            </div>
+                                                            <div name="group_minions" class="item form-group">
+                                                            </div>
+                                                            <div class="item form-group">
+                                                                <label class="control-label col-md-3 col-sm-3 col-xs-12">远程命令
+                                                                    <span class="required">*</span>
+                                                                </label>
+                                                                <div class="col-md-3 col-sm-3 col-xs-12">
+                                                                    <input type="text" class="form-control" id="egroup"
+                                                                           name="arg" value="{{ arg }}">
+                                                                </div>
+                                                            </div>
+                                                            <div class="ln_solid"></div>
+                                                            <div class="form-group">
+                                                                <div class="col-md-6 col-md-offset-3">
+                                                <span class="egroup">
+                                                <a href="#"
+                                                   onclick="remote_exec(this, 'exec', '{% url 'task:ajax-exec' %}');"
+                                                   name="panel-group" role="button" class="btn btn-success">运行</a>
+                                                </span>
+                                                                    <a href="#" onclick="show_result();" role="button"
+                                                                       class="btn btn-info">查看结果</a>
+                                                                </div>
+                                                            </div>
+                                                        </fieldset>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <input type="hidden" class="form-control" value="" id="jid">
+                                <input type="hidden" class="form-control" value="" id="exec_type">
+
+                            </div>
+
+                            <div class="col-md-5">
+                                <legend><i class="fa fa-paper-plane-o"></i> 执行结果</legend>
+                                <pre style="color: green;background-color: black">
+                                    <div id="result">
+                                    </div>
+                                </pre>
+
+                            </div>
+                            <div class="col-lg-6">
+                                <h4 id="info"></h4>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script src="/static/js/csrf.js"></script>
+
+    <script>
+
+        $(function () {
+            $("#panel-group select[name='tgt_select']").bind("change", function () {
+                var tgt_select = $("#panel-group select[name='tgt_select']").val();
+                if (tgt_select != "") {
+                    $.ajax({
+                        type: "POST",
+                        url: "{% url 'task:ajax-minions' %}",
+                        data: {tgt_select: tgt_select},
+                        dataType: "html",
+                        success: function (ret) {
+                            var ret = eval('(' + ret + ')');
+                            var html = "<label class=\"control-label col-md-3 col-sm-3 col-xs-12\">包含主机</label><div class=\"col-md-6 col-sm-6 col-xs-12\"><fieldset disabled><textarea class=\"form-control\">" + ret + "</textarea></fieldset></div>";
+                            $("#panel-group div[name='group_minions']").html(html);
+                        }
+                    })
+                }
+                else {
+                    $("#panel-group div[name='group_minions']").html("");
+                }
+            })
+        });
+
+        function remote_exec(obj, url) {
+            var fm = $(obj).closest("form");
+            var tgt_select = fm.find("select[name='tgt_select']").val();
+            var arg = fm.find("input[name='arg']").val();
+            if (tgt_select == "" || tgt_select == null || arg == "" || arg == undefined) {
+                alert("请选择主机 or 输入命令!");
+                return false;
+            }
+            $("#result").html("正在处理中，请等待。。。");
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {tgt_select: tgt_select, arg: arg, check_type: obj.name},
+                dataType: "html",
+
+                success: function (callback) {
+                    $("#result").html("");
+                    var res = JSON.parse(callback);
+                    var html = ""
+                    $.each(res.result, function (inx, item) {
+                        console.log(item);
+                        $.each(item, function (k, v) {
+                            {#                            $('#info').html("本次执行对象共1台,其中1台返回结果");#}
+                            {#                            html +=  '<b style="color: yellow">主机: ' +k  + '</b>' + '<br/>' + '执行结果: ' + '<br/>' + v + '<hr/>'#}
+                            html += '<b style="color: yellow">主机: ' + k + '</b>' + '<br/>' + '<p style="color: #00acd6">执行结果：' + '<br/>' + '</p>' + v + '<hr/>'
+
+                        }); //end item each
+                    }); //end each
+                    $('#result').append(html);
+                } //end success
+            });  //end ajax
+        };  //end func exec
+
+
+    </script>
+{% endblock %}
+
+

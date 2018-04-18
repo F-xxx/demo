@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="/static/css/plugins/webuploader/webuploader.css">
+
+{% endblock css %}
+
+{% block content %}
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5 style="color: red"><strong>更新维护</strong></h5>
+                    </div>
+
+                    <div class="ibox-content">
+
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <legend><i class=""></i> 更新</legend>
+                                <form id="fm" class="form-horizontal" method="post" action="">{% csrf_token %}
+                                    {% for i in form %}
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">{{ i.label }}</label>
+
+                                            <div class="col-sm-8">
+                                                {{ i }}
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                    <div class="form-group">
+                                        <div class="col-sm-offset-3 col-sm-8">
+                                            <a href="#" onclick="get_res()" class="btn btn-sm btn-info" type="submit">运 行</a>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <div class="col-lg-6">
+
+                                <legend><i class="fa fa-paper-plane-o"></i> 执行结果</legend>
+                                <pre style="color: #3c763d;background-color: black">
+                                    <div id="result">
+
+                                    </div>
+                                </pre>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock content %}
+
+{% block js %}
+
+    <script type="text/javascript">
+
+        function get_res() {
+            $("#result").html("正在处理中，请等待。。。");
+            $.ajax({
+                url: '{% url 'deploy:index' %}',
+                type: 'POST',
+                data: $('#fm').serialize(),
+                dataType: 'JSON',
+                success: function (callback) {
+                    $("#result").html("");
+                    $("#result").append(callback);
+                }
+            }); //end ajax
+        }
+
+    </script>
+
+
+{% endblock js %}
+

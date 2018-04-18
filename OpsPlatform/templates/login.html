@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <title> - 登录</title>
+    <meta name="keywords" content="">
+    <meta name="description" content="">
+
+    <link rel="shortcut icon" href="/static/favicon.ico">
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/font-awesome.css" rel="stylesheet">
+    <link href="/static/css/plugins/iCheck/custom.css" rel="stylesheet">
+    <link href="/static/css/animate.css" rel="stylesheet">
+    <link href="/static/css/style.css" rel="stylesheet">
+
+</head>
+
+<body class="gray-bg">
+
+<div class="middle-box text-center loginscreen  animated fadeInDown">
+    <div>
+        <div>
+
+            <h1 class="logo-name">C</h1>
+
+        </div>
+        <h3>欢迎使用 CoolFish运维系统</h3>
+
+        <form id="fm" class="m-t" role="form" method="post" action="{% url 'login' %}">{% csrf_token %}
+            <div class="form-group">
+                <input type="email" class="form-control" name="username" placeholder="邮箱" required="">
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" name="password" placeholder="密码" required="">
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-xs-7">
+                        <input type="text" class="form-control" name="verify_code" placeholder="验证码" required="">
+                    </div>
+                    <div class="col-xs-4">
+                        <img id="verify_code_img" src="{% url 'userperm:verify_code' %}" onclick="changeImg(this)">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group text-left">
+                    <div class="checkbox i-checks">
+                        <label class="no-padding">
+                            <input type="checkbox" value="1" name="rmb"><i></i> 一个月内自动登陆</label>
+                    </div>
+            </div>
+
+            <a id="submit" type="submit" class="btn btn-primary block full-width m-b">登 录</a>
+            <div class="" style="padding-left: 0;">
+                <div class="alert-err  alert-danger hide" >
+                    <span style="padding: 0 5px 0 5px;display: inline-block;font-size: 14px">
+                        <i class="fa fa-minus-circle" aria-hidden="true"></i>
+                    </span>
+                    <span id="error_msg" style="font-size: 12px;"></span>
+                </div>
+            </div>
+
+
+            <p class="text-muted text-center"><a href="login.html#">
+                <small>忘记密码？</small>
+            </a> | <a href="register.html">注册新账号</a>
+
+            </p>
+        </form>
+    </div>
+</div>
+
+<!-- 全局js -->
+<script src="/static/js/jquery.min.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<!-- iCheck -->
+<script src="/static/js/plugins/iCheck/icheck.min.js"></script>
+
+<script type="text/javascript">
+        $(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+            bindLogin();
+        });
+        function changeImg(ths) {
+        ths.src = ths.src + "?"
+    }
+
+        function bindLogin() {
+            $('#submit').click(function () {
+                var $msg = $('#error_msg');
+                $msg.parent().addClass('hide');
+                $.ajax({
+                    url: "{% url 'login' %}",
+                    type: 'POST',
+                    data: $('#fm').serialize(),
+                    //预期服务器返回的数据类型
+                    dataType: 'JSON',
+                    success: function (callback) {
+                        console.log(callback)
+                        if (callback.status){
+                            location.href = '{% url 'index' %} '
+                        }else{
+                            //失败显示错误信息
+                            $msg.parent().removeClass('hide');
+                            $msg.text(callback.message);
+                            var img = $('#verify_code_img')[0];
+                            console.log(img)
+                            //刷新图片验证码
+                            img.src = img.src + '?';
+                            //清空表单中的信息
+                            $('#password,#verify_code').val('');
+                        }
+                    }
+                })
+
+            })
+        }
+
+    </script>
+
+</body>
+
+</html>

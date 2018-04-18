@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block css %}
+
+{% endblock css %}
+
+{% block content %}
+    <div class="middle-box text-center animated fadeInDown">
+        <h1>403</h1>
+        <h3 class="font-bold">Forbidden！</h3>
+
+        <div class="error-desc">
+            <h3 style="color: #3c763d">抱歉，没有权限操作</h3>
+            <form class="form-inline m-t" role="form">
+                <div class="form-group">
+                    <input type="email" class="form-control" placeholder="请输入您需要查找的内容 …">
+                </div>
+                <button type="submit" class="btn btn-primary">搜索</button>
+            </form>
+        </div>
+    </div>
+{% endblock content %}

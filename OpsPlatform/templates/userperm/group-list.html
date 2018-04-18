@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    {% for g in obj %}
+        {{ g.name }}
+    {% endfor %}
+
+{% endblock content %}

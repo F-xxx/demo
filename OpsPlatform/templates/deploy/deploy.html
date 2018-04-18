@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="/static/css/plugins/webuploader/webuploader.css">
+
+{% endblock css %}
+
+{% block content %}
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5 style="color: red"><strong>更新维护</strong></h5>
+                    </div>
+
+                    <div class="ibox-content">
+
+                        <div class="row">
+                            <div class="col-md-8 col-md-offset-2">
+                                <form class="form-inline" role="form" method="post" enctype="multipart/form-data"
+                                      accept-charset="utf-8">{% csrf_token %}
+
+                                    <div class="form-group">
+                                        <input type="file" name="file">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="submit" value="上传文件">
+                                    </div>
+
+
+                                </form>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock content %}
+
+{% block js %}
+    <script src="/static/js/echarts.min.js"></script>
+    <script type="text/javascript">
+        var myChart = echarts.init(document.getElementById("morris-area-chart"));
+        var option = {
+            title: {
+                text: '最近7天部署',
+                subtext: '更新统计'
+            },
+            tooltip: {
+                trigger: 'axis'
+            },
+            legend: {
+                data: ['次数']
+            },
+            toolbox: {
+                show: true,
+                feature: {
+                    mark: {show: true},
+                    dataView: {show: true, readOnly: false},
+                    magicType: {show: true, type: ['line', 'bar']},
+                    restore: {show: true},
+                    saveAsImage: {show: true}
+                }
+            },
+            calculable: true,
+            xAxis: [
+                {
+                    type: 'category',
+                    boundaryGap: false,
+                    data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
+                }
+            ],
+            yAxis: [
+                {
+                    type: 'value',
+                }
+            ],
+            series: [
+                {
+                    name: '次数',
+                    type: 'line',
+                    data: [3, 1, 5, 2, 0, 0, 1],
+                    markPoint: {
+                        data: [
+                            {type: 'max', name: '最大值'},
+                            {type: 'min', name: '最小值'}
+                        ]
+                    },
+                    markLine: {
+                        data: [
+                            {type: 'average', name: '平均值'}
+                        ]
+                    }
+                },
+            ]
+        };
+
+
+        // 为echarts对象加载数据
+        myChart.setOption(option);
+
+
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+
+        });
+
+    </script>
+
+
+{% endblock js %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

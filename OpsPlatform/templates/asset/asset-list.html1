@@ -1,0 +1,145 @@
+{% extends 'base.html' %}
+
+{% block css %}
+<link href="/static/css/plugins/dataTables/dataTables.bootstrap.css" rel="stylesheet">
+    <!-- Sweet Alert -->
+    <link href="/static/css/plugins/sweetalert/sweetalert.css" rel="stylesheet">
+{% endblock css %}
+
+{% block content %}
+    <div class="wrapper wrapper-content animated fadeInRight">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5><strong>资产中心</strong></h5>
+                        <div class="ibox-tools">
+                            <a class="collapse-link">
+                                <i class="fa fa-chevron-up"></i>
+                            </a>
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                <i class="fa fa-wrench"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-user">
+                                <li><a href="#">选项1</a>
+                                </li>
+                                <li><a href="#">选项2</a>
+                                </li>
+                            </ul>
+                            <a class="close-link">
+                                <i class="fa fa-times"></i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ibox-content">
+
+                        <table id="datatable" class="table table-striped table-bordered table-hover dataTables-example">
+                            <thead>
+                            <tr>
+                                <th>资产编号</th>
+                                <th>资产类型</th>
+                                <th>放置区域</th>
+                                <th>主机名</th>
+                                <th>管理IP</th>
+                                <th>配置</th>
+                                <th>操作系统</th>
+                                <th>状态</th>
+                                <th>项目</th>
+                                <th>操作</th>
+                                <th>详细信息</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                {% for ser in server_list %}
+                                    <tr class="gradeA">
+                                    <td>{{ ser.name }}</td>
+                                    <td>{{ ser.get_asset_type_display }}</td>
+                                    <td>{{ ser.loaction.name }}</td>
+                                    <td>{{ ser.server_info.hostname }}</td>
+                                    <td>{{ ser.management_ip }}</td>
+                                    <td>cpu:{{ ser.server_info__ }}</td>
+{#                                    <td>cpu:{{ ser.server_info.asset_server }}|mem:{{ ser.server_info.memory }}G|disk:{{ ser.server_info.disk }}G</td>#}
+
+                                    <td>
+                                        {% if ser.server_info.system_type == 'win' %}
+                                            <i class="fa fa-windows"></i> {{ ser.server_info.get_system_type_display }}
+                                        {% else %}
+                                            <i class="fa fa-linux"></i> {{ ser.server_info.get_system_type_display}}
+                                        {% endif %}
+                                    </td>
+
+                                    <td>
+                                        {% if ser.status == 0 %}
+                                            <span class="btn btn-success btn-sm">{{ ser.get_status_display }}</span>
+                                        {% elif ser.status == 1 %}
+                                            <span class="btn btn-danger btn-sm">{{ ser.get_status_display }}</span>
+                                        {% else %}
+                                            <span class="btn btn-warning btn-sm">{{ ser.get_status_display }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ ser.project }}</td>
+                                     <td class="center"><a href="{% url 'asset:asset_manage' nid=ser.pk action='edit'  %} "
+                                                          class="btn btn-warning btn-sm" role="button"><i
+                                            class="fa fa-pencil"></i></a>
+                                        <button href="#" id="del" value="{{ u.pk }}" class="btn btn-danger btn-sm demo4"><i
+                                                class="fa fa-trash-o "></i></button>
+                                    </td>
+                                    <td><a href="{% url 'asset:asset_list' %}?nid={{ ser.pk }}"
+                                               class="btn btn-xs btn-primary" data-toggle="tooltip"
+                                               data-placement="bottom" title="" data-original-title="详情"> 详情 </a></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block js %}
+    <!-- Data Tables -->
+    <script src="/static/js/plugins/dataTables/jquery.dataTables.js"></script>
+    <script src="/static/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+
+    <!-- Sweet alert -->
+    <script src="/static/js/plugins/sweetalert/sweetalert.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#datatable').dataTable();
+
+            $('.demo4').click(function () {
+                id = $(this).attr("value");
+                swal({
+                        title: "您确定要删除这条记录",
+                        text: "删除后将无法恢复，请谨慎操作！",
+                        type: "warning",
+                        showCancelButton: true,
+                        confirmButtonColor: "#DD6B55",
+                        confirmButtonText: "是的，我要删除！",
+                        cancelButtonText: "让我再考虑一下…",
+                        closeOnConfirm: false,
+                        closeOnCancel: false
+                    },
+                    function (isConfirm) {
+                        if (isConfirm) {
+                            base_url = /asset_manage/ + id + '/' + 'delete' ;
+                            location.href = base_url;
+                            location.href = "{% url 'asset:asset_list' %}";
+                            swal("删除成功！", "您已经永久删除了这条信息。", "success");
+                        } else {
+                            swal("已取消", "您取消了删除操作！", "error");
+                        }
+                    });
+
+
+            });
+        });
+
+    </script>
+
+
+{% endblock js %}

@@ -1,0 +1,191 @@
+{% extends 'base.html' %}
+
+{% block css %}
+    <link href="/static/css/custom.css" rel="stylesheet">
+{% endblock css %}
+
+{% block content %}
+    <div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5><strong>图表中心</strong></h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link">
+                            <i class="fa fa-chevron-up"></i>
+                        </a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li><a href="#">选项1</a>
+                            </li>
+                            <li><a href="#">选项2</a>
+                            </li>
+                        </ul>
+                        <a class="close-link">
+                            <i class="fa fa-times"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-3 col-md-6">
+                        <div class="panel panel-warning">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-tasks  fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge">{{ asset_count }}</div>
+                                        <div>总资产</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="{% url 'asset:asset_list' %}">
+                                <div class="panel-footer">
+                                    <span class="pull-left">查看所有</span> <span class="pull-right"><i
+                                        class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-database fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge">10</div>
+                                        <div>设备资产</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#">
+                                <div class="panel-footer">
+                                    <span class="pull-left">查看所有</span> <span class="pull-right"><i
+                                        class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="panel panel-success">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-github-alt fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge">0</div>
+                                        <div>部署项目</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href=#>
+                                <div class="panel-footer">
+                                    <span class="pull-left">查看所有</span> <span class="pull-right"><i
+                                        class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="panel panel-danger">
+                            <div class="panel-heading">
+                                <div class="row">
+                                    <div class="col-xs-3">
+                                        <i class="fa fa-clock-o fa-5x"></i>
+                                    </div>
+                                    <div class="col-xs-9 text-right">
+                                        <div class="huge">5</div>
+                                        <div>计划任务</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#">
+                                <div class="panel-footer">
+                                    <span class="pull-left">查看所有</span> <span class="pull-right"><i
+                                        class="fa fa-arrow-circle-right"></i></span>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="hr-line-dashed"></div>
+
+                <div class="row">
+                    <div class="col-sm-6">
+                    <div class="ibox float-e-margins">
+                    <div class="ibox-title">
+                        <h5>柱状图</h5>
+
+                    </div>
+                    <div class="ibox-content">
+
+                        <div class="echarts" id="main"></div>
+                    </div>
+                </div>
+
+                </div>
+            </div>
+
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block js %}
+    <script src="/static/js/echarts.min.js"></script>
+
+    <script type="text/javascript">
+        // 基于准备好的dom，初始化echarts实例
+        var myChart = echarts.init(document.getElementById('main'));
+
+        // 指定图表的配置项和数据
+        var option = {
+            title: {
+                text: '服务器分类'
+            },
+            tooltip: {},
+            legend: {
+                data: ['类型']
+            },
+            xAxis: {
+                data: ["物理机", "云主机", "NOSQL", "云数据库", "内网服务器"]
+                {#                data: [#}
+                {#                    {% for type in asset_type %}#}
+                {#                        '{{ type.get_asset_type_display }}',#}
+                {#                    {% endfor %}#}
+                {#                ]#}
+            },
+            yAxis: {},
+            series: [{
+                name: '台数',
+                type: 'bar',
+                {#                data: [5, 20, 36, 10, 10]#}
+                data: [
+                    {{ physics_count }},
+                    {{ server_count }},
+                    {{ database_count }},
+                    {{ nosql_count }},
+                    {{ inside_count }},
+                ]
+            }]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        myChart.setOption(option);
+
+    </script>
+
+
+{% endblock js %}
